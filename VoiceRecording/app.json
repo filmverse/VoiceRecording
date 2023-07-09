@@ -1,9 +1,0 @@
-{
-  "name": "VoiceRecording",
-  "displayName": "VoiceRecording",
-  "expo": {
-    "plugins": [
-      "@react-native-voice/voice"
-    ]
-  }
-}
