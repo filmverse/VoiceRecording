@@ -10,18 +10,19 @@ import {
 import Voice from '@react-native-voice/voice';
 
 const App = () => {
+  const [isRecording, setIsRecording] = React.useState(false);
+
+  const startRec = () => {
+    console.log(isRecording);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View>
         <Text>Hello World !</Text>
         <Text>Hello World !</Text>
         <Text>Hello World !</Text>
-        <Button
-          title="Click ME!"
-          onPress={() =>
-            Alert.alert(`Testing button and alert, ${Voice.isAvailable()}`)
-          }
-        />
+        <Button title="Click ME!" onPress={startRec} />
       </View>
     </SafeAreaView>
   );
