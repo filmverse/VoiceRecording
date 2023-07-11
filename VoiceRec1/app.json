@@ -1,9 +1,0 @@
-{
-  "name": "VoiceRec1",
-  "displayName": "VoiceRec1",
-  "expo": {
-    "plugins": [
-      "@react-native-voice/voice"
-    ]
-  }
-}
