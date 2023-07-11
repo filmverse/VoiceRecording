@@ -1,13 +1,16 @@
 import React from 'react';
 import {SafeAreaView, StyleSheet, Text, View, Button} from 'react-native';
+import SpeechDetectionApp from './components/SpeechDetectionApp';
 
 const App = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <View>
+      <SpeechDetectionApp />
+      {/* <View>
         <Text style={styles.title}>Hellow World!</Text>
         <Button title="Hello Click!" />
-      </View>
+        <SpeechDetectionApp />
+      </View> */}
     </SafeAreaView>
   );
 };
