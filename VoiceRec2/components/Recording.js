@@ -19,10 +19,6 @@ const Recording = ({
                 console.log('Permissions not granted');
                 return;
             }
-            if (recording) {
-              console.log('Stopping the previous recording..');
-              await recording.stopAndUnloadAsync();
-            }
 
             console.log('Starting recording..');
             const recordingOptions = {
@@ -70,7 +66,7 @@ const Recording = ({
         console.log('Recording stopped and stored at', uri);
         setRecordingUri(uri); // Update the recording URI state variable
         setIsRecordingRunning(false);
-        Voice.stop();
+        Voice.stop()
     }
 
     // useEffect(() => {
