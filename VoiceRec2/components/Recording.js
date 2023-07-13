@@ -56,10 +56,16 @@ const Recording = ({
 
     async function stopRecording() {
         console.log('Stopping recording..');
-        await recording.stopAndUnloadAsync();
-        await Audio.setAudioModeAsync({
+        const status = await recording.getStatusAsync();
+        if (status.isRecording === true) {
+          // Wait a few milliseconds to give the `Recording` object a chance to initialize.
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          await recording.stopAndUnloadAsync();
+          await Audio.setAudioModeAsync({
             allowsRecordingIOS: false,
-        });
+          });
+        }
+        console.log('Stopping recording.. step2');
         const uri = recording.getURI();
         setRecording(null);
         setSound(new Audio.Sound());
