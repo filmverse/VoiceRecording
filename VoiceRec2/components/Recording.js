@@ -66,15 +66,8 @@ const Recording = ({
         console.log('Recording stopped and stored at', uri);
         setRecordingUri(uri); // Update the recording URI state variable
         setIsRecordingRunning(false);
-        Voice.stop()
+        Voice.stop();
     }
-
-    // useEffect(() => {
-    //   Voice.onSpeechEnd = onSpeechEnd;
-    //   return () => {
-    //     Voice.destroy().then(Voice.removeAllListeners);
-    //   };
-    // }, [])
 
     Voice.onSpeechEnd = async(e: any) => {
       console.log('onSpeechEnd: ', e);
