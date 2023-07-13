@@ -1,114 +1,97 @@
-import { Button } from 'react-native';
+import { useState, useEffect } from 'react';
+import { View, Text, Button } from 'react-native';
 import { Audio } from 'expo-av';
-import { useEffect } from 'react';
+import Voice from '@react-native-voice/voice';
 
-const Recording = ({ recording, setRecording, setSound, setRecordingUri, metering, setMetering, isRecordingRunning, setIsRecordingRunning }) => {
-    async function startRecording() {
-        try {
-            console.log('Requesting permissions..');
-            const { granted } = await Audio.requestPermissionsAsync();
-            if (!granted) {
-                console.log('Permissions not granted');
-                return;
-            }
+const Recording = ({ setSound, setRecordingUri, isRecordingRunning, setIsRecordingRunning }) => {
+  const [recording, setRecording] = useState(null);
 
-            console.log('Starting recording..');
-            const recordingOptions = {
-                isMeteringEnabled: true,
-                android: {
-                    extension: '.3gp',
-                    outputFormat: Audio.RECORDING_OPTION_ANDROID_OUTPUT_FORMAT_DEFAULT,
-                    audioEncoder: Audio.RECORDING_OPTION_ANDROID_AUDIO_ENCODER_DEFAULT,
-                    sampleRate: 44100,
-                    numberOfChannels: 2,
-                    bitRate: 128000,
-                },
-                ios: {
-                    extension: '.m4a',
-                    outputFormat: Audio.RECORDING_OPTION_IOS_OUTPUT_FORMAT_MPEG4AAC,
-                    audioQuality: Audio.RECORDING_OPTION_IOS_AUDIO_QUALITY_HIGH,
-                    sampleRate: 44100,
-                    numberOfChannels: 2,
-                    bitRate: 128000,
-                    linearPCMBitDepth: 16,
-                    linearPCMIsBigEndian: false,
-                    linearPCMIsFloat: false,
-                },
-            };
+  async function startRecording() {
+    try {
+      console.log('Requesting permissions..');
+      const { granted } = await Audio.requestPermissionsAsync();
+      if (!granted) {
+        console.log('Permissions not granted');
+        return;
+      }
 
-            const { recording } = await Audio.Recording.createAsync(recordingOptions);
-            setRecording(recording);
-            console.log('Recording started');
-            setIsRecordingRunning(true);
-        } catch (err) {
-            console.error('Failed to start recording', err);
-        }
-    }
-
-    async function stopRecording() {
-        console.log('Stopping recording..');
+      if (recording) {
+        console.log('Stopping the previous recording..');
         await recording.stopAndUnloadAsync();
-        await Audio.setAudioModeAsync({
-            allowsRecordingIOS: false,
-        });
-        const uri = recording.getURI();
-        setRecording(null);
-        setSound(new Audio.Sound());
-        console.log('Recording stopped and stored at', uri);
-        setRecordingUri(uri); // Update the recording URI state variable
-        setIsRecordingRunning(false);
+      }
+
+      console.log('Starting @react-native-voice/voice');
+      await Voice.start('en-US');
+      console.log('Starting recording..');
+      const recordingOptions = {
+        isMeteringEnabled: true,
+        android: {
+          extension: '.3gp',
+          outputFormat: Audio.RECORDING_OPTION_ANDROID_OUTPUT_FORMAT_DEFAULT,
+          audioEncoder: Audio.RECORDING_OPTION_ANDROID_AUDIO_ENCODER_DEFAULT,
+          sampleRate: 44100,
+          numberOfChannels: 2,
+          bitRate: 128000,
+        },
+        ios: {
+          extension: '.m4a',
+          outputFormat: Audio.RECORDING_OPTION_IOS_OUTPUT_FORMAT_MPEG4AAC,
+          audioQuality: Audio.RECORDING_OPTION_IOS_AUDIO_QUALITY_HIGH,
+          sampleRate: 44100,
+          numberOfChannels: 2,
+          bitRate: 128000,
+          linearPCMBitDepth: 16,
+          linearPCMIsBigEndian: false,
+          linearPCMIsFloat: false,
+        },
+      };
+
+      const { recording } = await Audio.Recording.createAsync(recordingOptions);
+      setRecording(recording);
+      console.log('Recording started');
+      setIsRecordingRunning(true);
+    } catch (err) {
+      console.error('Failed to start recording', err);
     }
+  }
 
-    useEffect(() => {
-        let timerId;
-        let meteringReadings = [];
-        async function monitorLoudness() {
-            if (recording) {
-                metering = await recording.getStatusAsync();
-                setMetering(metering);
-                console.log('metering', metering);
+  async function stopRecording() {
+    if (recording) {
+      console.log('Stopping recording..');
+      await recording.stopAndUnloadAsync();
+      const uri = recording.getURI();
+      setRecording(null);
+      setSound(new Audio.Sound());
+      console.log('Recording stopped and stored at', uri);
+      setRecordingUri(uri); // Update the recording URI state variable
+      setIsRecordingRunning(false);
+    } else {
+      console.log('No recording available');
+    }
+  }
 
-                meteringReadings.push(metering.metering);
+  useEffect(() => {
+    Voice.onSpeechStart = () => {
+      setIsRecordingRunning(true);
+    };
 
-                if (meteringReadings.length >= 6) {
-                    // Check if the last six metering readings are both less than -22 and more than -3
-                    const lastSixReadings = meteringReadings.slice(-6);
-                    const areLastSixLessThan22 = lastSixReadings.every(reading => reading < -22 || reading > -3);
-                    if (areLastSixLessThan22) {
-                        console.log('last six readings are both less than -22 and more than -3');
-                        stopRecording()
-                    }
-                }
+    Voice.onSpeechEnd = () => {
+      console.log('Stopping @react-native-voice/voice');
+      Voice.stop();
+      stopRecording();
+    };
 
-                if (meteringReadings.length > 6) {
-                    meteringReadings.shift(); // Remove the oldest metering reading from the array
-                }
+    return () => {
+      Voice.destroy().then(Voice.removeAllListeners);
+    };
+  }, []);
 
-            }
-        }
-        function myFunction() {
-            if (isRecordingRunning) {
-                timerId = setInterval(monitorLoudness, 500);
-                console.log('getting metering data');
-            } else {
-                clearInterval(timerId);
-                meteringReadings = [];
-            }
-        }
-        myFunction();
-    
-        return () => {
-            clearInterval(timerId);
-            meteringReadings = [];
-        };
-    }, [isRecordingRunning]);
-
-    return (
-        <Button
-            title={recording ? 'Stop Recording' : 'Start Recording'}
-            onPress={recording ? stopRecording : startRecording}
-        />
-    )
-}
+  return (
+    <View>
+      <Text>{isRecordingRunning ? 'Recording...' : 'Recording Stopped'}</Text>
+      <Button title={recording ? 'Stop Recording' : 'Start Recording'} onPress={recording ? stopRecording : startRecording} />
+    </View>
+  );
+};
 
 export default Recording;
