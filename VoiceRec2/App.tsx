@@ -2,7 +2,7 @@ import * as React from 'react';
 import {View, StyleSheet} from 'react-native';
 import Recording from './components/Recording';
 import PlaySound from './components/PlaySound';
-import SpeechDetectionApp from './components/SpeechDetectionApp';
+// import SpeechDetectionApp from './components/SpeechDetectionApp';
 
 export default function App() {
   const [sound, setSound] = React.useState();
@@ -33,7 +33,7 @@ export default function App() {
         setIsRecordingRunning={setIsRecordingRunning}
       />
       <PlaySound recordingUri={recordingUri} setSound={setSound} />
-      <SpeechDetectionApp />
+      {/* <SpeechDetectionApp /> */}
     </View>
   );
 }
