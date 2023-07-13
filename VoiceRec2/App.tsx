@@ -8,7 +8,6 @@ export default function App() {
   const [sound, setSound] = React.useState();
   const [recording, setRecording] = React.useState();
   const [recordingUri, setRecordingUri] = React.useState(null);
-  const [metering, setMetering] = React.useState();
   const [isRecordingRunning, setIsRecordingRunning] = React.useState(false);
 
   React.useEffect(() => {
@@ -27,8 +26,6 @@ export default function App() {
         setRecording={setRecording}
         setSound={setSound}
         setRecordingUri={setRecordingUri}
-        metering={metering}
-        setMetering={setMetering}
         isRecordingRunning={isRecordingRunning}
         setIsRecordingRunning={setIsRecordingRunning}
       />
