@@ -13,6 +13,8 @@ const Recording = ({
 }) => {
   async function startRecording() {
         try {
+          console.log('Destroying Voice');
+            Voice.destroy().then(Voice.removeAllListeners);
             console.log('Requesting permissions..');
             const { granted } = await Audio.requestPermissionsAsync();
             if (!granted) {
