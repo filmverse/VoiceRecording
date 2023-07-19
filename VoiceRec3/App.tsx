@@ -10,10 +10,7 @@ const App = () => {
         <Text style={styles.title1}>
           Response Result: I am hoping the result should be a big text array
         </Text>
-        <Button
-          title="Press Me"
-          onPress={() => Alert.alert('Simple Button pressed')}
-        />
+        <Button title="Press Me" onPress={() => {Alert.alert("Button Clicked Successfully")}}/>
       </View>
     );
 }
