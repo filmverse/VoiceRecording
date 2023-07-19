@@ -4,7 +4,6 @@ import {View, Text, Button, StyleSheet, Alert} from 'react-native';
 import Voice, {
   SpeechRecognizedEvent,
   SpeechResultsEvent,
-  SpeechErrorEvent,
 } from '@react-native-voice/voice';
 
 const App = () => {
