@@ -5,16 +5,17 @@ import Voice, {
   SpeechRecognizedEvent,
   SpeechResultsEvent,
 } from '@react-native-voice/voice';
+import axios from 'axios';
 
 const App = () => {
-  const [recognized, setRecognized] = useState('');
+  const [recognized, setRecognized] = useState([]);
   const [end, setEnd] = useState('');
   const [started, setStarted] = useState('');
   const [results, setResults] = useState([]);
+  const [recording, setRecording] = useState(false);
 
   useEffect(() => {
     Voice.onSpeechStart = onSpeechStart;
-    Voice.onSpeechRecognized = onSpeechRecognized;
     Voice.onSpeechEnd = onSpeechEnd;
     Voice.onSpeechResults = onSpeechResults;
 
@@ -26,20 +27,23 @@ const App = () => {
   const onSpeechStart = (e: any) => {
     console.log('onSpeechStart: ', e);
     setStarted('√');
-  };
-
-  const onSpeechRecognized = (e: SpeechRecognizedEvent) => {
-    console.log('onSpeechRecognized: ', e);
-    setRecognized('√');
+    setRecording(true);
   };
 
   const onSpeechEnd = (e: any) => {
     console.log('onSpeechEnd: ', e);
     setEnd('√');
+    setRecording(false);
   };
 
   const onSpeechResults = (e: SpeechResultsEvent) => {
     console.log('onSpeechResults: ', e);
+    axios.get(`https://api.datamuse.com/words?sl=${e.value}`).then(
+      response => {
+        setRecognized(response.data.slice(0, 3).map(item => item.word));
+        console.log(response.data.slice(0, 3).map(item => item.word)); 
+      }
+    );
     setResults(e.value);
   };
 
@@ -71,7 +75,7 @@ const App = () => {
   };
 
   const _clearState = () => {
-    setRecognized('');
+    setRecognized([]);
     setEnd('');
     setStarted('');
     setResults([]);
@@ -91,8 +95,10 @@ const App = () => {
         );
       })}
       <Text style={styles.title1}>{`End: ${end}`}</Text>
-      <Button title="Start Rec" onPress={_startRecognizing} />
-      <Button title="Stop Rec" onPress={_stopRecognizing} />
+      <Button
+        title={recording ? 'Stop Recording' : 'Start Recording'}
+        onPress={recording ? _stopRecognizing : _startRecognizing}
+      />
       <Button title="Destroy Rec" onPress={_destroyRecognizer} />
     </View>
   );
