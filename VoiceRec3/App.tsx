@@ -7,6 +7,8 @@ import Voice, {
 } from '@react-native-voice/voice';
 import axios from 'axios';
 
+const Separator = () => <View style={styles.separator} />;
+
 const App = () => {
   const [recognized, setRecognized] = useState([]);
   const [end, setEnd] = useState('');
@@ -85,7 +87,9 @@ const App = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Voice Rec-Version3</Text>
       <Text style={styles.title1}>{`Started: ${started}`}</Text>
+      <Separator />
       <Text style={styles.title1}>{`Recognized: ${recognized}`}</Text>
+      <Separator />
       <Text style={styles.title1}>Results</Text>
       {results.map((result, index) => {
         return (
@@ -94,12 +98,19 @@ const App = () => {
           </Text>
         );
       })}
+      <Separator />
       <Text style={styles.title1}>{`End: ${end}`}</Text>
+      <Separator />
       <Button
         title={recording ? 'Stop Recording' : 'Start Recording'}
         onPress={recording ? _stopRecognizing : _startRecognizing}
       />
-      <Button title="Destroy Rec" onPress={_destroyRecognizer} />
+      <Separator />
+      <Button
+        title="Destroy Rec"
+        color={'#FF0000'}
+        onPress={_destroyRecognizer}
+      />
     </View>
   );
 };
@@ -108,13 +119,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 24,
-    backgroundColor: '#eaeaea',
+    backgroundColor: '#380C2A',
   },
   title: {
     marginTop: 16,
     paddingVertical: 8,
     borderWidth: 4,
-    borderColor: '#20232a',
+    borderColor: '#859900',
     borderRadius: 6,
     backgroundColor: '#61dafb',
     color: '#20232a',
@@ -125,7 +136,12 @@ const styles = StyleSheet.create({
   title1: {
     textAlign: 'center',
     marginVertical: 8,
-    color: '#380C2A',
+    color: '#00FF00',
+  },
+  separator: {
+    marginVertical: 8,
+    borderBottomColor: '#737373',
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
 });
 
