@@ -14,12 +14,14 @@ const App = () => {
   const [end, setEnd] = useState('');
   const [started, setStarted] = useState('');
   const [results, setResults] = useState([]);
+  const [partialResults, setPartialResults] = useState([]);
   const [recording, setRecording] = useState(false);
 
   useEffect(() => {
     Voice.onSpeechStart = onSpeechStart;
     Voice.onSpeechEnd = onSpeechEnd;
     Voice.onSpeechResults = onSpeechResults;
+    Voice.onSpeechPartialResults = onSpeechPartialResults;
 
     return () => {
       Voice.destroy().then(Voice.removeAllListeners);
@@ -47,6 +49,11 @@ const App = () => {
       }
     );
     setResults(e.value);
+  };
+
+  const onSpeechPartialResults = (e: SpeechResultsEvent) => {
+    console.log('onSpeechPartialResults: ', e);
+    setPartialResults(e.value);
   };
 
   const _startRecognizing = async () => {
@@ -81,6 +88,7 @@ const App = () => {
     setEnd('');
     setStarted('');
     setResults([]);
+    setPartialResults([]);
   };
 
   return (
@@ -94,6 +102,15 @@ const App = () => {
       {results.map((result, index) => {
         return (
           <Text key={`result-${index}`} style={styles.title1}>
+            {result}
+          </Text>
+        );
+      })}
+      <Separator />
+      <Text style={styles.title1}>Partial Results</Text>
+      {partialResults.map((result, index) => {
+        return (
+          <Text key={`partial-result-${index}`} style={styles.title1}>
             {result}
           </Text>
         );
