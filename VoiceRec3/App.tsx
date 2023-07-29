@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import React, {useEffect, useState} from 'react';
 import {View, Text, Button, StyleSheet, Alert} from 'react-native';
 import Voice, {SpeechResultsEvent} from '@react-native-voice/voice';
