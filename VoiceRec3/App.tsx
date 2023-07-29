@@ -1,16 +1,11 @@
 /* eslint-disable prettier/prettier */
 import React, {useEffect, useState} from 'react';
 import {View, Text, Button, StyleSheet, Alert} from 'react-native';
-import Voice, {
-  SpeechRecognizedEvent,
-  SpeechResultsEvent,
-} from '@react-native-voice/voice';
-import axios from 'axios';
+import Voice, {SpeechResultsEvent} from '@react-native-voice/voice';
 
 const Separator = () => <View style={styles.separator} />;
 
 const App = () => {
-  const [recognized, setRecognized] = useState([]);
   const [end, setEnd] = useState('');
   const [started, setStarted] = useState('');
   const [results, setResults] = useState([]);
@@ -42,12 +37,6 @@ const App = () => {
 
   const onSpeechResults = (e: SpeechResultsEvent) => {
     console.log('onSpeechResults: ', e);
-    axios.get(`https://api.datamuse.com/words?sl=${e.value}`).then(
-      response => {
-        setRecognized(response.data.slice(0, 3).map(item => item.word));
-        console.log(response.data.slice(0, 3).map(item => item.word)); 
-      }
-    );
     setResults(e.value);
   };
 
@@ -84,7 +73,6 @@ const App = () => {
   };
 
   const _clearState = () => {
-    setRecognized([]);
     setEnd('');
     setStarted('');
     setResults([]);
@@ -95,8 +83,6 @@ const App = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Voice Rec-Version3</Text>
       <Text style={styles.title1}>{`Started: ${started}`}</Text>
-      <Separator />
-      <Text style={styles.title1}>{`Recognized: ${recognized}`}</Text>
       <Separator />
       <Text style={styles.title1}>Results</Text>
       {results.map((result, index) => {
