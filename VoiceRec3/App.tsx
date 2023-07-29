@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Button, StyleSheet, Alert} from 'react-native';
+import {View, Text, Button, StyleSheet} from 'react-native';
 import Voice, {SpeechResultsEvent} from '@react-native-voice/voice';
 
 const Separator = () => <View style={styles.separator} />;
