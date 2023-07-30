@@ -48,6 +48,7 @@ const App = () => {
     _clearState();
     try {
       await Voice.start('en-US');
+      await Voice.start('en-IN');
       console.log('called start');
     } catch (e) {
       console.error(e);
@@ -57,6 +58,7 @@ const App = () => {
   const _stopRecognizing = async () => {
     try {
       await Voice.stop();
+      await Voice.stop();
     } catch (e) {
       console.error(e);
     }
@@ -64,6 +66,7 @@ const App = () => {
 
   const _destroyRecognizer = async () => {
     try {
+      await Voice.destroy();
       await Voice.destroy();
     } catch (e) {
       console.error(e);
