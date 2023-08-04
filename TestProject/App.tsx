@@ -1,14 +1,19 @@
 import React from 'react';
-import { useRef } from 'react';
+import {useRef, useEffect} from 'react';
 import {Text, Button, View, Alert} from 'react-native';
 
 const App = () => {
   const testBtn = useRef();
-  setTimeout(() => {
-    if (testBtn.current) {
-      testBtn.current.props.onPress();
-    }
-  }, 5000);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (testBtn.current) {
+        testBtn.current.props.onPress();
+      }
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <View>
       <Text>Auto calling Button</Text>
