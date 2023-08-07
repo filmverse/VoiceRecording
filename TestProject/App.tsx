@@ -9,7 +9,7 @@ const App = () => {
       testBtn.current._internalFiberInstanceHandleDEV.pendingProps.children[1].props.onPress();
       console.log(
         'Working',
-        testBtn.current._internalFiberInstanceHandleDEV.pendingProps.children[1].props.onPress
+        testBtn.current._internalFiberInstanceHandleDEV.memoizedProps.children[1].props.onPress
       );
     }
   }, []);
