@@ -8,10 +8,10 @@ const App = () => {
     if (testBtn.current) {
       // testBtn.current.props.onPress();
       testBtn.current._internalFiberInstanceHandleDEV.pendingProps.children[1].props.onPress();
-      // console.log(
-      //   'Working',
-      //   testBtn.current._internalFiberInstanceHandleDEV.pendingProps.children[1].props.onPress()
-      // );
+      console.log(
+        'Working',
+        testBtn.current._internalFiberInstanceHandleDEV.pendingProps.children[1].props.onPress
+      );
     }
     // const interval = setInterval(() => {
     //   if (testBtn.current) {
